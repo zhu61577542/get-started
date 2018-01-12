@@ -14,32 +14,43 @@ def open_index():
         page_url_list.append(i)
     return page_url_list
 
+
 #从www.dukerealestateclub.com子页面提取链接指向反链网站的链接
 def open_page(page_url_list):
     back_link_list = []
     for i in page_url_list:
-        url = i
-        html = request.Request(url, headers=head)
-        req = request.urlopen(html)
-        webpate = req.read().decode('utf-8')
+        try:
+            html = request.Request(i, headers=head)
+
+            req = request.urlopen(html)
+            webpate = req.read().decode('utf-8')
+        except:
+            print('openurl error: %s'%i)
+            continue
         ma = re.findall(r'<a href[^>].+">', webpate)
         for a in ma:
             a = a[9:-2]
             back_link_list.append([i,a])
     return back_link_list
 
+
+
 #查看反链网站页面中是否存在链接，如果存在调用测试返回码函数
 def open_back_link(back_link_list):
     exist_link_list = []
     for i in back_link_list:
         (index_for_url,page_url) = i
-        html = request.Request(page_url, headers=head)
-        req = request.urlopen(html)
-        http_code = req.getcode()
+        try:
+            html = request.Request(page_url, headers=head)
+            req = request.urlopen(html,timeout=10)
+            http_code = req.getcode()
+        except:
+            print('OPEN URL ERROR:%s --> %s' %(index_for_url,page_url))
+            continue
         webpage = req.read().decode('utf-8')
         ma = re.findall(r'<a href[^>]+>',webpage)
         if not ma or http_code != 200:
-            print('not link:%s --> %s' %(index_for_url,page_url))
+            print('not link:%s --> %s http code: %s' %(index_for_url,page_url,http_code))
         else:
             exist_link_list.append([index_for_url, page_url])
     test_access(exist_link_list)
