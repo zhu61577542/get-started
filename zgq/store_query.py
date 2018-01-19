@@ -82,7 +82,7 @@ if __name__ == '__main__':
         checked_result = diff(domain_words,query_words)
         if not checked_result:
             checked_result = 'Low'
-
+        i[4] = checked_result
 
         #print("%s\n" % ("\t".join(i)))
         output.write("%s\n" % ("\t".join(i)))
