@@ -27,7 +27,6 @@ def open_page(page_url_list):
             a = a[9:-2]
             back_link_list.append([i,a])
     return back_link_list
-
 #查看反链网站页面中是否存在链接，如果存在调用测试返回码函数
 def open_back_link(back_link_list):
     exist_link_list = []
@@ -63,6 +62,7 @@ def test_access(test_link):
             http_code = req.getcode()
 
             print('%s --> %s --> %s http code: %s'%(index_for_url, page_url, ma, http_code))
+
 
 data = open_index()
 page = open_page(data)
